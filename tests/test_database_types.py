@@ -3,11 +3,8 @@ import unittest
 import time
 import json
 import re
-<<<<<<< HEAD
 import rich.progress
-=======
 import os
->>>>>>> 6d04375 (i hate debugging ci soooo much)
 import math
 import uuid
 from datetime import datetime, timedelta
@@ -411,7 +408,7 @@ def expand_params(testcase_func, param_num, param):
     # Avoid tables between runs for Cloud databases to step on each other.
     # Avoid doing it for MySQL because it's local, and has the lowest limitation
     if os.environ.get("GITHUB_RUN_ID", False) and source_db_type != db.MySQL and target_db_type != db.MySQL:
-        name += os.environ["GITHUB_RUN_ID"]
+        name += os.environ["GITHUB_RUN_ID"] + os.environ["GITHUB_RUN_NUMBER"]
 
     return name
 
@@ -472,11 +469,11 @@ def _create_indexes(conn, table):
     try:
         if_not_exists = "IF NOT EXISTS" if not isinstance(conn, (db.MySQL, db.Oracle)) else ""
         conn.query(
-            f"CREATE INDEX {if_not_exists} idx_{table[1:-1]}_id_col ON {table} (id, col)",
+            f"CREATE INDEX {if_not_exists} xa_{table[1:-1]} ON {table} (id, col)",
             None,
         )
         conn.query(
-            f"CREATE INDEX {if_not_exists} idx_{table[1:-1]}_id ON {table} (id)",
+            f"CREATE INDEX {if_not_exists} xb_{table[1:-1]} ON {table} (id)",
             None,
         )
     except Exception as err:
