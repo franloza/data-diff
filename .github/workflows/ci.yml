@@ -25,6 +25,7 @@ jobs:
 
     name: Check Python ${{ matrix.python-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    environment: AUTHENTICATION
     steps:
       - uses: actions/checkout@v3
 
