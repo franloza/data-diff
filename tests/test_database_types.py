@@ -3,7 +3,11 @@ import unittest
 import time
 import json
 import re
+<<<<<<< HEAD
 import rich.progress
+=======
+import os
+>>>>>>> 6d04375 (i hate debugging ci soooo much)
 import math
 import uuid
 from datetime import datetime, timedelta
@@ -403,6 +407,12 @@ def expand_params(testcase_func, param_num, param):
         sanitize(target_type),
         number_to_human(N_SAMPLES),
     )
+
+    # Avoid tables between runs for Cloud databases to step on each other.
+    # Avoid doing it for MySQL because it's local, and has the lowest limitation
+    if os.environ.get("GITHUB_RUN_ID", False) and source_db_type != db.MySQL and target_db_type != db.MySQL:
+        name += os.environ["GITHUB_RUN_ID"]
+
     return name
 
 
